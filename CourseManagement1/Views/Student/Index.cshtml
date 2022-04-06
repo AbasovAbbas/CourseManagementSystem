@@ -1,0 +1,48 @@
+﻿@model List<CourseManagement.Models.StudentSubject>
+
+@{
+    ViewData["Title"] = "Index";
+    
+}
+
+    <div class="row">
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Student panel</h3>
+                </div>
+                <ul class="list-unstyled components">
+                    <li class="active">
+                        <a href="#">Home</a>
+                    </li>
+                    <li>
+                        <a asp-controller="timetables" asp-action="IndexForStudent" asp-route-id="@ViewData["Sid"].ToString()">Timetable</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+
+            </nav>
+            <!-- Page Content  -->
+            <div id="content" class="d-flex">
+                @foreach (var item in Model)
+                {<div class="card m-1 w-25 " style="height : 250px;">
+                        <div class="card-header">
+                            
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Subject.Title</h5>
+                            <p class="card-text">Ders cedveli ile tanis olmaq ucun TimeTable baxin</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+

@@ -1,0 +1,79 @@
+﻿@model CourseManagement.Models.ViewModels.StudentViewModel
+
+@{
+    ViewData["Title"] = "AddStudent";
+}
+
+<h1>AddStudent</h1>
+
+<h4>StudentViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddStudent">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" hidden class="control-label"></label>
+                <input asp-for="Id" hidden class="form-control" />
+                <span asp-validation-for="Id" hidden class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubjectIds" class="control-label"></label><br />
+                @Html.ListBoxFor(model => model.SubjectIds, new MultiSelectList(Model.drpSubjects, "Value", "Text"), new { @class = "form-control", multiple = "multiple", id = "Subjects_dropdown" })
+            </div>
+       @*     <div class="form-group">
+                <label asp-for="TeacherIds" class="control-label"></label><br />
+                @Html.ListBoxFor(model => model.TeacherIds, new MultiSelectList(Model.drpTeachers, "Value", "Text"), new { @class = "form-control", multiple = "multiple", id = "Teachers_dropdown" })
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $('#Subjects_dropdown').multiselect();
+        });
+        $(document).ready(function () {
+            $('#Teachers_dropdown').multiselect();
+        });
+    </script>
+}

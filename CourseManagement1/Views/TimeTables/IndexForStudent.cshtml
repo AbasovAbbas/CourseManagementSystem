@@ -1,0 +1,22 @@
+﻿@model IEnumerable<CourseManagement.Models.TimeTable>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>TimeTable</h1>
+<div class="d-flex">
+    @foreach (var item in Model)
+    {
+        <div class="card m-2" style="height : 250px;width : 270px;">
+            <div class="card-header">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@item.Subject.Title</h5>
+                <p class="card-text">Teacher : @item.Teacher.Name</p>
+                <p class="card-text">@item.Time</p>
+                <a asp-action="" asp-controller="" class="btn btn-primary">Bax</a>
+            </div>
+        </div>
+    }
+</div>
