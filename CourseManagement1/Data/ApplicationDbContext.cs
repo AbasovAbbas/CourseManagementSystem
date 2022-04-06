@@ -32,6 +32,11 @@ namespace CourseManagement.Data
                 .WithMany(x => x.TeacherSubjects)
                 .HasForeignKey(x => x.SubjectId);
 
+            builder.Entity<TeacherStudent>()
+                .HasOne(x => x.Teacher)
+                .WithMany(x => x.TeacherStudents)
+                .HasForeignKey(x => x.TeacherId);
+
             base.OnModelCreating(builder);
         }
     }

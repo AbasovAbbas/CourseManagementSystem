@@ -86,6 +86,34 @@ namespace CourseManagement.Controllers
             return View(timeTable);
         }
 
+        [Authorize(Roles = "Admin,Teacher")]
+        public IActionResult CreateForTeacher(string id)
+        {
+            ViewData["StudentId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo != 0), "Id", "Name");
+            ViewData["SubjectId"] = new SelectList(_context.TeacherSubject.Where(s => s.TeacherId == id).Select(x => x.Subject), "Id", "Title");
+            return View();
+        }
+
+        // POST: TimeTables/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Teacher")]
+        public async Task<IActionResult> CreateForTeacher([Bind("Id,Time,TeacherId,StudentId,SubjectId")] TimeTable timeTable)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(timeTable);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Name", timeTable.StudentId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Title", timeTable.SubjectId);
+            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Name", timeTable.TeacherId);
+            return View(timeTable);
+        }
+
         // GET: TimeTables/Edit/5
         [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Edit(int? id)

@@ -15,6 +15,8 @@ namespace CourseManagement.Models
         public int EnrollmentNo { get; set; }
         public virtual List<StudentSubject> StudentSubjects { get; set; }
         public virtual List<TeacherSubject> TeacherSubjects { get; set; }
+        public virtual List<TeacherStudent> TeacherStudents { get; set; }
+        //public virtual List<TeacherStudent>  { get; set; }
 
     }
 }

@@ -29,6 +29,7 @@ namespace CourseManagement.Controllers
         //bu action teacher panele yonlenir.
         public async Task<ActionResult> Index(string id)
         {
+            ViewData["ID"] = id;
             var result =await _context.TeacherSubject.Include(x => x.Teacher).Include(x => x.Subject).Where(t => t.TeacherId == id).ToListAsync();
             return View(result);
         }

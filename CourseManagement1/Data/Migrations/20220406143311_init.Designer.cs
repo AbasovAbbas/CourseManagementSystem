@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220406050317_intt")]
-    partial class intt
+    [Migration("20220406143311_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,6 +142,28 @@ namespace CourseManagement.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.TeacherStudent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("TeacherStudent");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.TeacherSubject", b =>
@@ -344,6 +366,21 @@ namespace CourseManagement.Data.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("CourseManagement.Models.TeacherStudent", b =>
+                {
+                    b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+
+                    b.HasOne("CourseManagement.Models.ApplicationUser", "Teacher")
+                        .WithMany("TeacherStudents")
+                        .HasForeignKey("TeacherId");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("CourseManagement.Models.TeacherSubject", b =>
                 {
                     b.HasOne("CourseManagement.Models.Subject", "Subject")
@@ -438,6 +475,8 @@ namespace CourseManagement.Data.Migrations
             modelBuilder.Entity("CourseManagement.Models.ApplicationUser", b =>
                 {
                     b.Navigation("StudentSubjects");
+
+                    b.Navigation("TeacherStudents");
 
                     b.Navigation("TeacherSubjects");
                 });

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,6 +74,7 @@ namespace CourseManagement.Controllers
                     Name = model.Name,
                     Age = model.Age,
                     Address = model.Address,
+                    EnrollmentNo = model.EnrollmentNo,
                     EmailConfirmed = true
                 };
                 if (model.SubjectIds.Length > 0)

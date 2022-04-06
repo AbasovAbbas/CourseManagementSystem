@@ -20,7 +20,7 @@
                         <a asp-action="ListOfStudents" asp-controller="Student">Students</a>
                     </li>
                     <li>
-                        <a asp-action="index" asp-controller="timetables">Timetable</a>
+                        <a asp-action="createForTeacher" asp-controller="timetables" asp-route-id="@ViewData["ID"]">Timetable</a>
                     </li>
                     <li>
                         <a href="#">Contact</a>
