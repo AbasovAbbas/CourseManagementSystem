@@ -7,9 +7,9 @@
 <h1>Subjects</h1>
 
 <p>
-    <a asp-action="create" asp-controller="subject"><button class="btn btn-success">Create</button></a>
+    <a asp-action="create" asp-controller="subject" class="btn btn-success">Create</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -25,9 +25,9 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="m-2" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit" style="color : deepskyblue"></i></a> 
+                <a class="m-2" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-send"></i></a> 
+                <a class="m-2" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash" style="color : red"></i></a>
             </td>
         </tr>
 }

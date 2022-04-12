@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CourseManagement.Data.Migrations
+namespace CourseManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220406143311_init")]
-    partial class init
+    [Migration("20220410123959_payment")]
+    partial class payment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -96,6 +96,32 @@ namespace CourseManagement.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TotalFee")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.StudentSubject", b =>
@@ -349,6 +375,15 @@ namespace CourseManagement.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CourseManagement.Models.Payment", b =>
+                {
+                    b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
+                        .WithMany("Payments")
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("CourseManagement.Models.StudentSubject", b =>
                 {
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
@@ -369,8 +404,9 @@ namespace CourseManagement.Data.Migrations
             modelBuilder.Entity("CourseManagement.Models.TeacherStudent", b =>
                 {
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
+                        .WithMany("StudentTeachers")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Teacher")
                         .WithMany("TeacherStudents")
@@ -474,7 +510,11 @@ namespace CourseManagement.Data.Migrations
 
             modelBuilder.Entity("CourseManagement.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Payments");
+
                     b.Navigation("StudentSubjects");
+
+                    b.Navigation("StudentTeachers");
 
                     b.Navigation("TeacherStudents");
 

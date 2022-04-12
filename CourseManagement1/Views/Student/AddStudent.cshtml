@@ -46,10 +46,10 @@
                 <label asp-for="SubjectIds" class="control-label"></label><br />
                 @Html.ListBoxFor(model => model.SubjectIds, new MultiSelectList(Model.drpSubjects, "Value", "Text"), new { @class = "form-control", multiple = "multiple", id = "Subjects_dropdown" })
             </div>
-            @*     <div class="form-group">
+             <div class="form-group">
             <label asp-for="TeacherIds" class="control-label"></label><br />
             @Html.ListBoxFor(model => model.TeacherIds, new MultiSelectList(Model.drpTeachers, "Value", "Text"), new { @class = "form-control", multiple = "multiple", id = "Teachers_dropdown" })
-        </div>*@
+        </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />

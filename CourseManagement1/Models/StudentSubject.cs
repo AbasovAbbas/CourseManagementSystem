@@ -10,8 +10,7 @@ namespace CourseManagement.Models
     public class StudentSubject
     {
         public int Id { get; set; }
-        public string Note { get; set; }
-        public DateTime EnrollmentDate { get; set; }
+        
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }
         public virtual Subject Subject { get; set; }

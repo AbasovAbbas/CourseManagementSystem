@@ -21,6 +21,11 @@ namespace CourseManagement.Models.ViewModels
         [NotMapped]
         public int[] SubjectIds { get; set; }
         [NotMapped]
+        public List<SelectListItem> drpTeachers { get; set; }
+        [Display(Name = "Teachers")]
+        [NotMapped]
+        public string[] TeacherIds { get; set; }
+        [NotMapped]
         
         [Required]
         [EmailAddress]

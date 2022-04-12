@@ -1,0 +1,59 @@
+﻿@model IEnumerable<CourseManagement.Models.Payment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Payments List</h1>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Student)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentMethod)
+            </td>
+            <td class=" pl-4">
+                <label class="badge-success rounded p-1 pl-2 pr-2">@Html.DisplayFor(modelItem => item.PaymentStatus)</label>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                <a class="m-2" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit" style="color : deepskyblue"></i></a>
+                <a class="m-2" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-send"></i></a>
+                <a class="m-2" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash" style="color : red"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

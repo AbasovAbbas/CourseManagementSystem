@@ -1,6 +1,7 @@
 ﻿using CourseManagement.Data;
 using CourseManagement.Models;
 using CourseManagement.Models.ViewModels;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace CourseManagement.Controllers
     [Authorize(Roles = "Admin,Teacher")]
     public class TeacherController : Controller
     {
-        //private readonly RoleManager<IdentityRole> _roleManager;
+        static readonly ILog _log = LogManager.GetLogger(typeof(TeacherController));
         private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _context;
 
@@ -82,6 +83,8 @@ namespace CourseManagement.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Teacher");
+                    LogicalThreadContext.Properties["user"] = user.Name;
+                    _log.Info("teacher added by admin");
                     return RedirectToAction("ListOfTeachers", "teacher");
                 }
                 foreach (var error in result.Errors)
@@ -89,7 +92,7 @@ namespace CourseManagement.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-
+            model.drpSubjects = _context.Subjects.Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() }).ToList();
             return View(model);
         }
     }

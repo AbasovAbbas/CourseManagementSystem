@@ -1,6 +1,7 @@
 ﻿using CourseManagement.Data;
 using CourseManagement.Models;
 using CourseManagement.Models.ViewModels;
+using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace CourseManagement.Controllers
 {
     public class StudentController : Controller
     {
+        static readonly ILog _log = LogManager.GetLogger(typeof(StudentController));
         private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _context;
 
@@ -46,16 +48,16 @@ namespace CourseManagement.Controllers
         {
             var model = new StudentViewModel();
             model.drpSubjects = _context.Subjects.Select(x => new SelectListItem { Text = x.Title, Value = x.Id.ToString() }).ToList();
-            
-            /*List<TeacherViewModel> list = new List<TeacherViewModel>();
+
+            List<TeacherViewModel> list = new List<TeacherViewModel>();
             var result = await _userManager.GetUsersInRoleAsync("Teacher");
             foreach (var item in result)
             {
-                list.Add(new TeacherViewModel { Id= item.Id,Name = item.Name, Age = item.Age, Address = item.Address, Email = item.Email });
+                list.Add(new TeacherViewModel { Id = item.Id, Name = item.Name, Age = item.Age, Address = item.Address, Email = item.Email });
             }
 
             model.drpTeachers = list.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
-            */
+
             return View(model);
         }
         [HttpPost]
@@ -64,7 +66,7 @@ namespace CourseManagement.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             List<StudentSubject> studentSubjects = new List<StudentSubject>();
-            List<StudentSubject> studentTeachers = new List<StudentSubject>();
+            List<TeacherStudent> studentTeachers = new List<TeacherStudent>();
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -86,18 +88,28 @@ namespace CourseManagement.Controllers
                     user.StudentSubjects = studentSubjects;
                 }
 
-                /*if (model.TeacherIds.Length > 0)
+                if (model.TeacherIds.Length > 0)
                 {
                     foreach (var teacherId in model.TeacherIds)
                     {
-                        studentTeachers.Add(new StudentSubject { TeacherId = teacherId, StudentId = user.Id });
+                        studentTeachers.Add(new TeacherStudent { TeacherId = teacherId, StudentId = user.Id });
                     }
-                    user.StudentSubjects = studentTeachers;
-                }*/
+                    user.StudentTeachers = studentTeachers;
+                }
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     _userManager.AddToRoleAsync(user, "Student").Wait();
+                    LogicalThreadContext.Properties["user"] = user.UserName;
+                    if (User.IsInRole("Admin"))
+                    {
+                        _log.Info("added by admin");
+                    }
+                    else
+                    {
+                        _log.Info($"added by {User.Identity.Name}");
+                    }
+                    
                     return RedirectToAction("listOfStudents", "student");
                 }
                 foreach (var error in result.Errors)

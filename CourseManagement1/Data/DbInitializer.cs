@@ -1,6 +1,7 @@
 ﻿using CourseManagement.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,9 @@ namespace CourseManagement.Data
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
+               
                 InitSubjects(db);
+                //CreateLogTable();
                 string[] roleNames = { "Admin", "Teacher", "Student" };
                 IdentityResult roleResult;
                 foreach (var roleName in roleNames)
@@ -37,7 +39,8 @@ namespace CourseManagement.Data
                     ApplicationUser user = new ApplicationUser() {
                         UserName = Email,
                         Email = Email,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        EnrollmentNo = -1
                     };
                     IdentityResult result = userManager.CreateAsync(user, Password).Result;
 
@@ -50,33 +53,52 @@ namespace CourseManagement.Data
             return app;
         }
 
+        /*private static void CreateLogTable()
+        {
+            SqlConnection conn = new SqlConnection();
+            if (conn.State == System.Data.ConnectionState.Open)
+            {
+                conn.Close();
+            }
+            string ConnectionString = "Integrated Security=SSPI;" +
+            "Initial Catalog=SchoolDB;" +
+            "Data Source=DESKTOP-L3IGC35;";
+            conn.ConnectionString = ConnectionString;
+            conn.Open();
+            string sql = "CREATE TABLE Logs" +
+            "([Id] [int] IDENTITY(1, 1) NOT NULL," +
+            "[Date] [datetime] NOT NULL," +
+            "[Thread] [varchar](255) NOT NULL," +
+            "[Level] [varchar](50) NOT NULL," +
+            "[Logger] [varchar](255) NOT NULL," +
+            "[Message] [varchar](4000) NOT NULL," +
+            "[Exception] [varchar](2000) NULL)";
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }*/
+
         private static void InitSubjects(ApplicationDbContext db)
         {
             if (!db.Subjects.Any())
             {
                     db.Subjects.AddRange(new Subject
                     {
-                        Id = 1,
                         Title = "Cebr"
                     },new Subject
                     {
-                        Id=2,
                         Title = "Hendese"
                     }, new Subject
                     {
-                        Id=3,
                         Title = "C# proqramlasdirma"
                     }, new Subject
                     {
-                        Id = 4,
                         Title = "Web proqramlasdirma"
                     }, new Subject
                     {
-                        Id = 5,
                         Title = "VBIS - SQL"
                     }, new Subject
                     {
-                        Id = 6,
                         Title = "Java proqramlasdirma"
                     });
                     db.SaveChanges();

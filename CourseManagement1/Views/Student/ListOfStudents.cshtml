@@ -7,9 +7,9 @@
 <h1>ListOfStudents</h1>
 
 <p>
-    <a asp-action="addStudent">Create New</a>
+    <a asp-action="addStudent" class="btn btn-success">Create New</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -43,15 +43,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConfirmPassword)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a class="m-2" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit" style="color : deepskyblue"></i></a>
+                <a class="m-2" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-send"></i></a>
+                <a class="m-2" asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash" style="color : red"></i></a>
             </td>
         </tr>
 }

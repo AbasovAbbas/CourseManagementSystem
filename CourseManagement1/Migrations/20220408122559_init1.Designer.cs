@@ -4,14 +4,16 @@ using CourseManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CourseManagement.Data.Migrations
+namespace CourseManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220408122559_init1")]
+    partial class init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -367,8 +369,9 @@ namespace CourseManagement.Data.Migrations
             modelBuilder.Entity("CourseManagement.Models.TeacherStudent", b =>
                 {
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
+                        .WithMany("StudentTeachers")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Teacher")
                         .WithMany("TeacherStudents")
@@ -473,6 +476,8 @@ namespace CourseManagement.Data.Migrations
             modelBuilder.Entity("CourseManagement.Models.ApplicationUser", b =>
                 {
                     b.Navigation("StudentSubjects");
+
+                    b.Navigation("StudentTeachers");
 
                     b.Navigation("TeacherStudents");
 
