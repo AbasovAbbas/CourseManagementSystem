@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using CourseManagement.Data;
 using CourseManagement.Models;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PaymentController : Controller
     {
         static readonly ILog _log = LogManager.GetLogger(typeof(PaymentController));
