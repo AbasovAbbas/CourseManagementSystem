@@ -52,7 +52,6 @@ namespace CourseManagement.Data
             }
             return app;
         }
-
         private static void CreateLogTable()
         {
             SqlConnection conn = new SqlConnection();
@@ -61,11 +60,11 @@ namespace CourseManagement.Data
                 conn.Close();
             }
             string ConnectionString = "Integrated Security=SSPI;" +
-            "Initial Catalog=SchoolDB;" +
+            "Initial Catalog=CourseDB;" +
             "Data Source=DESKTOP-L3IGC35;";
             conn.ConnectionString = ConnectionString;
             conn.Open();
-            if (!TableExists(conn, "SchoolDB", "Logs"))
+            if (!TableExists(conn, "CourseDB", "Logs"))
             {
                 string sql = "CREATE TABLE Logs" +
                 "([Id] [int] IDENTITY(1, 1) NOT NULL," +
