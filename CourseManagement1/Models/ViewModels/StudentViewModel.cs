@@ -15,16 +15,14 @@ namespace CourseManagement.Models.ViewModels
         public int Age { get; set; }
         public string Address { get; set; }
         public int EnrollmentNo { get; set; }
-        [NotMapped]
-        public List<SelectListItem> drpSubjects { get; set; }
-        [Display(Name = "Subjects")]
-        [NotMapped]
-        public int[] SubjectIds { get; set; }
-        [NotMapped]
+        public int GroupId { get; set; }
+        [ForeignKey("GroupId")]
+        public virtual Group Group { get; set; }
+        /*[NotMapped]
         public List<SelectListItem> drpTeachers { get; set; }
         [Display(Name = "Teachers")]
         [NotMapped]
-        public string[] TeacherIds { get; set; }
+        public string[] TeacherIds { get; set; }*/
         [NotMapped]
         
         [Required]

@@ -34,6 +34,7 @@ namespace CourseManagement.Controllers
             var result =await _context.TeacherSubject.Include(x => x.Teacher).Include(x => x.Subject).Where(t => t.TeacherId == id).ToListAsync();
             return View(result);
         }
+         
         public async Task<IActionResult> ListOfTeachers()
         {
             List<TeacherViewModel> list = new List<TeacherViewModel>();
@@ -44,7 +45,6 @@ namespace CourseManagement.Controllers
             }
             return View(list);
         }
-
 
         [HttpGet]
         public IActionResult AddTeacher()

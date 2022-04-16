@@ -10,20 +10,19 @@ namespace CourseManagement.Models
     public class TimeTable
     {
         public int Id { get; set; }
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
+        [ForeignKey("Group")]
+        [Display(Name = "Group")]
+        public int GroupId { get; set; }
+        public virtual Group Group { get; set; }
         [ForeignKey("Teacher")]
         [Display(Name = "Teacher")]
         public string TeacherId { get; set; }
         public virtual ApplicationUser Teacher { get; set; }
-        [ForeignKey("Student")]
-        [Display(Name = "Student")]
-        public string StudentId { get; set; }
-        public virtual ApplicationUser Student { get; set; }
         [ForeignKey("Subject")]
         [Display(Name = "Subject")]
         public int SubjectId { get; set; }
         public virtual Subject Subject { get; set; }
-
 
     }
 }

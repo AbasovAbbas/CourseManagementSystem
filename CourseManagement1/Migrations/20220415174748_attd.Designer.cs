@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220410123959_payment")]
-    partial class payment
+    [Migration("20220415174748_attd")]
+    partial class attd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.15")
+                .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("CourseManagement.Models.ApplicationUser", b =>
@@ -47,6 +47,9 @@ namespace CourseManagement.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("EnrollmentNo")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
@@ -87,6 +90,8 @@ namespace CourseManagement.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -98,6 +103,66 @@ namespace CourseManagement.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("CourseManagement.Models.Attandance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AttandanceType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Attandance");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Group");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.GroupSubject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("GroupSubject");
+                });
+
             modelBuilder.Entity("CourseManagement.Models.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -105,8 +170,11 @@ namespace CourseManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
@@ -122,34 +190,6 @@ namespace CourseManagement.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Payment");
-                });
-
-            modelBuilder.Entity("CourseManagement.Models.StudentSubject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("StudentSubject");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.Subject", b =>
@@ -221,8 +261,8 @@ namespace CourseManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("StudentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
@@ -230,12 +270,12 @@ namespace CourseManagement.Migrations
                     b.Property<string>("TeacherId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Time")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("SubjectId");
 
@@ -375,6 +415,43 @@ namespace CourseManagement.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CourseManagement.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("CourseManagement.Models.Group", "Group")
+                        .WithMany("Students")
+                        .HasForeignKey("GroupId");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.Attandance", b =>
+                {
+                    b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.GroupSubject", b =>
+                {
+                    b.HasOne("CourseManagement.Models.Group", "Group")
+                        .WithMany("GroupSubjects")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CourseManagement.Models.Subject", "Subject")
+                        .WithMany("GroupSubjects")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("CourseManagement.Models.Payment", b =>
                 {
                     b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
@@ -382,23 +459,6 @@ namespace CourseManagement.Migrations
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("CourseManagement.Models.StudentSubject", b =>
-                {
-                    b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
-                        .WithMany("StudentSubjects")
-                        .HasForeignKey("StudentId");
-
-                    b.HasOne("CourseManagement.Models.Subject", "Subject")
-                        .WithMany("StudentSubjects")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.TeacherStudent", b =>
@@ -436,9 +496,11 @@ namespace CourseManagement.Migrations
 
             modelBuilder.Entity("CourseManagement.Models.TimeTable", b =>
                 {
-                    b.HasOne("CourseManagement.Models.ApplicationUser", "Student")
+                    b.HasOne("CourseManagement.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CourseManagement.Models.Subject", "Subject")
                         .WithMany()
@@ -450,7 +512,7 @@ namespace CourseManagement.Migrations
                         .WithMany()
                         .HasForeignKey("TeacherId");
 
-                    b.Navigation("Student");
+                    b.Navigation("Group");
 
                     b.Navigation("Subject");
 
@@ -512,8 +574,6 @@ namespace CourseManagement.Migrations
                 {
                     b.Navigation("Payments");
 
-                    b.Navigation("StudentSubjects");
-
                     b.Navigation("StudentTeachers");
 
                     b.Navigation("TeacherStudents");
@@ -521,9 +581,16 @@ namespace CourseManagement.Migrations
                     b.Navigation("TeacherSubjects");
                 });
 
+            modelBuilder.Entity("CourseManagement.Models.Group", b =>
+                {
+                    b.Navigation("GroupSubjects");
+
+                    b.Navigation("Students");
+                });
+
             modelBuilder.Entity("CourseManagement.Models.Subject", b =>
                 {
-                    b.Navigation("StudentSubjects");
+                    b.Navigation("GroupSubjects");
 
                     b.Navigation("TeacherSubjects");
                 });

@@ -1,4 +1,4 @@
-﻿@model CourseManagement.Models.TimeTable
+﻿@model CourseManagement.Models.Attandance
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>TimeTable</h4>
+    <h4>Attandance</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,22 +17,16 @@
             @Html.DisplayFor(model => model.Time)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Teacher)
+            @Html.DisplayNameFor(model => model.AttandanceType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Teacher.Id)
+            @Html.DisplayFor(model => model.AttandanceType)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
+            @Html.DisplayNameFor(model => model.Student)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Group.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Subject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Id)
+            @Html.DisplayFor(model => model.Student.Id)
         </dd>
     </dl>
 </div>

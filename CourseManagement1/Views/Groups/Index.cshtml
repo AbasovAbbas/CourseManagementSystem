@@ -1,23 +1,17 @@
-﻿@model IEnumerable<CourseManagement.Models.TimeTable>
+﻿@model IEnumerable<CourseManagement.Models.GroupSubject>
 
 @{
-    ViewData["Title"] = "ListOfTimeTable";
+    ViewData["Title"] = "Index";
 }
 
-<h1>ListOfTimeTable</h1>
+<h1>Index</h1>
 
 <p>
     <a class="btn btn-success" asp-action="Create">Create New</a>
 </p>
-<table class="table table-striped">
+<table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Group)
             </th>
@@ -30,12 +24,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Teacher.Name)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Group.Name)
             </td>

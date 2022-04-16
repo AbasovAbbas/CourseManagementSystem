@@ -1,0 +1,56 @@
+﻿@model List<CourseManagement.Models.Attandance>
+
+@{
+    ViewData["Title"] = "Create";
+    var std =  ViewData["StudentId"] as List<ApplicationUser>;
+}
+
+<h1>Create</h1>
+
+<h4>Attandance</h4>
+
+<form asp-action="Create">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Attandance Type
+                </th>
+                <th>
+                    Time
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                @for (var i = 0; i < std.Count; i ++)
+                {
+                    
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => std[i].Name)
+                    <input type="hidden" asp-for="@Model[i].StudentId" value="@std[i].Id" />
+                </td>
+                <td>
+                    <select class="form-control w-50" asp-for="@Model[i].AttandanceType" asp-items="Html.GetEnumSelectList<AttandanceType>()"></select>
+                </td>
+                <td>
+                    <input type="hidden" asp-for="@Model[i].Time" value="@ViewBag.Time" />
+                    @ViewBag.Time
+                </td>
+            </tr>
+                }
+
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

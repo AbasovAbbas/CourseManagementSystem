@@ -21,7 +21,7 @@ namespace CourseManagement.Data
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                
                 InitSubjects(db);
-                //CreateLogTable();
+                CreateLogTable();
                 string[] roleNames = { "Admin", "Teacher", "Student" };
                 IdentityResult roleResult;
                 foreach (var roleName in roleNames)
@@ -53,7 +53,7 @@ namespace CourseManagement.Data
             return app;
         }
 
-        /*private static void CreateLogTable()
+        private static void CreateLogTable()
         {
             SqlConnection conn = new SqlConnection();
             if (conn.State == System.Data.ConnectionState.Open)
@@ -65,19 +65,36 @@ namespace CourseManagement.Data
             "Data Source=DESKTOP-L3IGC35;";
             conn.ConnectionString = ConnectionString;
             conn.Open();
-            string sql = "CREATE TABLE Logs" +
-            "([Id] [int] IDENTITY(1, 1) NOT NULL," +
-            "[Date] [datetime] NOT NULL," +
-            "[Thread] [varchar](255) NOT NULL," +
-            "[Level] [varchar](50) NOT NULL," +
-            "[Logger] [varchar](255) NOT NULL," +
-            "[Message] [varchar](4000) NOT NULL," +
-            "[Exception] [varchar](2000) NULL)";
-            SqlCommand cmd = new SqlCommand(sql, conn);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-        }*/
+            if (!TableExists(conn, "SchoolDB", "Logs"))
+            {
+                string sql = "CREATE TABLE Logs" +
+                "([Id] [int] IDENTITY(1, 1) NOT NULL," +
+                "[Date] [datetime] NOT NULL," +
+                "[Thread] [varchar](255) NOT NULL," +
+                "[Level] [varchar](50) NOT NULL," +
+                "[Logger] [varchar](255) NOT NULL," +
+                "[Message] [varchar](4000) NOT NULL," +
+                "[Exception] [varchar](2000) NULL)";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+        private static bool TableExists(SqlConnection conn, string database, string name)
+        {
+            string strCmd = null;
+            SqlCommand sqlCmd = null;
 
+            try
+            {
+                strCmd = "select count (*)  from information_schema.tables where table_name = 'Logs'";
+
+                sqlCmd = new SqlCommand(strCmd, conn);
+
+                return (int)sqlCmd.ExecuteScalar() == 1;
+            }
+            catch { return false; }
+        }
         private static void InitSubjects(ApplicationDbContext db)
         {
             if (!db.Subjects.Any())

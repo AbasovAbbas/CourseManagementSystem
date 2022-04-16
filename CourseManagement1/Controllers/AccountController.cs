@@ -58,7 +58,7 @@ namespace CourseManagement.Controllers
                                 {
                                     LogicalThreadContext.Properties["user"] = user.UserName;
                                     _log.Info("logged in to the system");
-                                    return RedirectToAction("index", "student", new { user.Id });
+                                    return RedirectToAction("index", "student", new { user.GroupId });
                                 }
                             }
                         }

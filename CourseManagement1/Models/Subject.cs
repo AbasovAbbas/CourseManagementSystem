@@ -10,7 +10,7 @@ namespace CourseManagement.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public int Price { get; set; }
-        public virtual List<StudentSubject> StudentSubjects { get; set; }
+        public virtual List<GroupSubject> GroupSubjects { get; set; }
         //public virtual List<StudentSubject> TeacherSubjects1 { get; set; }
         public virtual List<TeacherSubject> TeacherSubjects { get; set; }
     }

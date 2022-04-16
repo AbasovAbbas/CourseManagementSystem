@@ -15,7 +15,7 @@ namespace CourseManagement.Controllers
     //[Authorize(Roles = "Admin,Teacher")]
     public class TimeTablesController : Controller
     {
-        static readonly ILog _log = LogManager.GetLogger(typeof(AccountController));
+        static readonly ILog _log = LogManager.GetLogger(typeof(TimeTablesController));
         private readonly ApplicationDbContext _context;
         public TimeTablesController(ApplicationDbContext context)
         {
@@ -26,16 +26,21 @@ namespace CourseManagement.Controllers
         [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.TimeTables.Include(t => t.Student).Include(t => t.Subject).Include(t => t.Teacher);
+            var applicationDbContext = _context.TimeTables.Include(t => t.Group).Include(t => t.Teacher).Include(t => t.Subject);
             return View(await applicationDbContext.ToListAsync());
         }
         [Authorize(Roles = "Student")]
-        public async Task<IActionResult> IndexForStudent(string id)
+        public async Task<IActionResult> IndexForStudent(int id)
         {
-            var applicationDbContext = _context.TimeTables.Include(t => t.Student).Include(t => t.Subject).Include(t => t.Teacher).Where(t => t.StudentId == id);
+            var applicationDbContext = _context.TimeTables.Include(t => t.Group).Include(t => t.Teacher).Include(t => t.Subject).Where(t => t.GroupId == id);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        public async Task<ActionResult> IndexForTeacher(string id)
+        {
+            //ViewData["Id"] = id;
+            var result = _context.TimeTables.Include(t => t.Group).Include(t => t.Teacher).Include(t => t.Subject).Where(x => x.TeacherId == id);
+            return View(result);
+        }
         // GET: TimeTables/Details/5
         [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Details(int? id)
@@ -46,9 +51,9 @@ namespace CourseManagement.Controllers
             }
 
             var timeTable = await _context.TimeTables
-                .Include(t => t.Student)
-                .Include(t => t.Subject)
+                .Include(t => t.Group)
                 .Include(t => t.Teacher)
+                .Include(t => t.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (timeTable == null)
             {
@@ -62,7 +67,7 @@ namespace CourseManagement.Controllers
         [Authorize(Roles = "Admin,Teacher")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo > 0), "Id", "Name");
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Title");
             ViewData["TeacherId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo == 0), "Id", "Name");
             return View();
@@ -74,7 +79,7 @@ namespace CourseManagement.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Create([Bind("Id,Time,TeacherId,StudentId,SubjectId")] TimeTable timeTable)
+        public async Task<IActionResult> Create([Bind("Id,Time,TeacherId,SubjectId,GroupId")] TimeTable timeTable)
         {
             if (ModelState.IsValid)
             {
@@ -83,16 +88,16 @@ namespace CourseManagement.Controllers
                 _log.Info("Timetable added by admin");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Name", timeTable.StudentId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name", timeTable.GroupId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Title", timeTable.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Name", timeTable.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo == 0), "Id", "Name", timeTable.TeacherId);
             return View(timeTable);
         }
 
-        [Authorize(Roles = "Admin,Teacher")]
+        /*[Authorize(Roles = "Admin,Teacher")]
         public IActionResult CreateForTeacher(string id)
         {
-            ViewData["StudentId"] = new SelectList(_context.TeacherStudent.Where(x => x.TeacherId == id).Select(x => x.Student), "Id", "Name");
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name");
             ViewData["SubjectId"] = new SelectList(_context.TeacherSubject.Where(s => s.TeacherId == id).Select(x => x.Subject), "Id", "Title");
             return View();
         }
@@ -113,11 +118,11 @@ namespace CourseManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.TeacherStudent.Where(x => x.TeacherId == id).Select(x => x.Student), "Id", "Name", timeTable.StudentId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name", timeTable.GroupId);
             ViewData["SubjectId"] = new SelectList(_context.TeacherSubject.Where(s => s.TeacherId == id).Select(x => x.Subject), "Id", "Title", timeTable.SubjectId);
 
             return View(timeTable);
-        }
+        }*/
 
         // GET: TimeTables/Edit/5
         [Authorize(Roles = "Admin,Teacher")]
@@ -133,9 +138,9 @@ namespace CourseManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Name", timeTable.StudentId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", timeTable.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Name", timeTable.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name", timeTable.GroupId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Title", timeTable.SubjectId);
+            ViewData["TeacherId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo == 0), "Id", "Name", timeTable.TeacherId);
             return View(timeTable);
         }
 
@@ -145,7 +150,7 @@ namespace CourseManagement.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Time,TeacherId,StudentId,SubjectId")] TimeTable timeTable)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Time,TeacherId,GroupId,SubjectId")] TimeTable timeTable)
         {
             if (id != timeTable.Id)
             {
@@ -172,9 +177,9 @@ namespace CourseManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Name", timeTable.StudentId);
+            ViewData["GroupId"] = new SelectList(_context.Group, "Id", "Name", timeTable.GroupId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Title", timeTable.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Name", timeTable.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Users.Where(x => x.EnrollmentNo==0), "Id", "Name", timeTable.TeacherId);
             return View(timeTable);
         }
 
@@ -188,7 +193,7 @@ namespace CourseManagement.Controllers
             }
 
             var timeTable = await _context.TimeTables
-                .Include(t => t.Student)
+                .Include(t => t.Group)
                 .Include(t => t.Subject)
                 .Include(t => t.Teacher)
                 .FirstOrDefaultAsync(m => m.Id == id);

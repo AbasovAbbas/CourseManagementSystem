@@ -12,10 +12,10 @@
             <div class="card-header">
             </div>
             <div class="card-body">
-                <h5 class="card-title">@item.Subject.Title</h5>
-                <p class="card-text">Teacher : @item.Teacher.Name</p>
+                <h5 class="card-title">@item.Group.Name</h5>
+                <p class="card-text">Subject : @item.Subject.Title</p>
                 <p class="card-text">@item.Time</p>
-                <a href="#" class="btn btn-primary">Bax</a>
+                <a asp-action="create" asp-controller="attandances" asp-route-id="@item.Group.Id" asp-route-time="@item.Time" class="btn btn-primary">Bax</a>
             </div>
         </div>
     }

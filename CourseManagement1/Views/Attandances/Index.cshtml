@@ -1,28 +1,25 @@
-﻿@model IEnumerable<CourseManagement.Models.TimeTable>
+﻿@model IEnumerable<CourseManagement.Models.Attandance>
 
 @{
-    ViewData["Title"] = "ListOfTimeTable";
+    ViewData["Title"] = "Index";
 }
 
-<h1>ListOfTimeTable</h1>
+<h1>Index</h1>
 
 <p>
-    <a class="btn btn-success" asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New</a>
 </p>
-<table class="table table-striped">
+<table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Student)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Time)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Teacher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                @Html.DisplayNameFor(model => model.AttandanceType)
             </th>
             <th></th>
         </tr>
@@ -31,16 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Student.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Time)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Teacher.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Title)
+                @Html.DisplayFor(modelItem => item.AttandanceType)
             </td>
             <td>
                 <a class="m-2" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit" style="color : deepskyblue"></i></a>
